@@ -10,6 +10,11 @@ queries.isSubpresent = function(subscriber) {
 }
 
 
+queries.deactivate = function(subscriber,id) {
+ return `UPDATE subscribers SET ACTIVE = 'false' WHERE SUBSCRIBER = '${subscriber}' AND ID = '${id}'`;
+}
+
+
 
 
 module.exports = queries;

@@ -1,3 +1,4 @@
+const { response } = require('express');
 const connection = require('./db');
 const queries = require('./queries');
 // create a user if not exist
@@ -32,9 +33,9 @@ const register_user = class Register {
  }
 
 
- isHaveSubscriber = () => {
+ isHaveSubscriber = (subscriber) => {
   return new Promise((resolve, reject) => {
-   connection.query(queries.isSubpresent(this.subscriber), (err, result) => {
+   connection.query(queries.isSubpresent(subscriber), (err, result) => {
     if (err) throw err;
     if (result.length > 0) {
      resolve(true)
@@ -44,9 +45,35 @@ const register_user = class Register {
    })
   })
  }
+
+ deactivateSubscriber = (response,subscriber,id) => {
+  this.isHaveSubscriber(subscriber).then((result) => {
+   if (result) {
+    connection.query(queries.deactivate(subscriber,id), (err, result) => {
+     if (err) throw err;
+     response.send({
+      message: 'subscriber deactivated successfully',
+      status: 200,
+     })
+    })
+   } else {
+    response.send({
+     message: 'subscriber not found',
+     status: 404
+    })
+   }
+  })
+ }
+
 }
 
 
 
 
-module.exports = register_user;
+module.exports = register_user
+
+
+
+
+
+
